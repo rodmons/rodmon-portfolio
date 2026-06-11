@@ -3,12 +3,11 @@ const siteNav = document.querySelector(".site-nav");
 const year = document.querySelector("#year");
 const mediaImages = document.querySelectorAll(".media-slot .asset-image");
 const reelDialog = document.querySelector("#reel-dialog");
-const reelVideo = document.querySelector(".reel-video");
+const reelEmbed = document.querySelector(".reel-video-embed");
 const reelOpenButton = document.querySelector("[data-open-reel]");
 const reelCloseButton = document.querySelector("[data-close-reel]");
 const reelThumbnailImage = document.querySelector("[data-open-reel] .asset-image");
 const reelThumbnailFallback = document.querySelector("[data-open-reel] .media-fallback");
-const reelVideoSource = reelVideo?.querySelector("source");
 const reelDialogTitle = document.querySelector("#reel-dialog-title");
 const reelSwitchButtons = document.querySelectorAll("[data-reel-type]");
 const reelMicro = document.querySelector("[data-reel-micro]");
@@ -25,7 +24,7 @@ const galleryLightboxClose = document.querySelector(".gallery-lightbox-close");
 const reelModes = {
   live: {
     thumbnail: "assets/demo_reel/live_action_thumbnail.jpg",
-    video: "assets/demo_reel/live_action_reel.mp4",
+    embed: "https://player.vimeo.com/video/874232000",
     alt: "Live action demo reel thumbnail",
     fallback: "Live Action Demo Reel 2023",
     micro: "SKL_01 - 08",
@@ -35,7 +34,7 @@ const reelModes = {
   },
   animation: {
     thumbnail: "assets/demo_reel/animation_thumbnail.jpg",
-    video: "assets/demo_reel/animation_reel.mp4",
+    embed: "https://player.vimeo.com/video/458824989",
     alt: "CG animation compositing reel thumbnail",
     fallback: "Animation Compositing Reel 2020",
     micro: "CG_01 - 06",
@@ -89,9 +88,12 @@ mediaImages.forEach((image) => {
   }
 });
 
-if (reelDialog && reelVideo && reelOpenButton && reelCloseButton) {
-  const applyReelMode = (type, shouldLoadVideo = true) => {
+if (reelDialog && reelEmbed && reelOpenButton && reelCloseButton) {
+  let selectedEmbed = "";
+
+  const applyReelMode = (type) => {
     const mode = reelModes[type] || reelModes.live;
+    selectedEmbed = mode.embed;
 
     reelSwitchButtons.forEach((button) => {
       const isActive = button.dataset.reelType === type;
@@ -115,17 +117,6 @@ if (reelDialog && reelVideo && reelOpenButton && reelCloseButton) {
       reelThumbnailFallback.textContent = mode.fallback;
     }
 
-    if (reelVideoSource) {
-      reelVideoSource.src = mode.video;
-    }
-
-    reelVideo.poster = mode.thumbnail;
-
-    if (shouldLoadVideo) {
-      reelVideo.pause();
-      reelVideo.load();
-    }
-
     if (reelDialogTitle) {
       reelDialogTitle.textContent = mode.fallback;
     }
@@ -147,7 +138,7 @@ if (reelDialog && reelVideo && reelOpenButton && reelCloseButton) {
     }
   };
 
-  applyReelMode("live", false);
+  applyReelMode("live");
 
   reelSwitchButtons.forEach((button) => {
     button.addEventListener("click", () => {
@@ -157,13 +148,13 @@ if (reelDialog && reelVideo && reelOpenButton && reelCloseButton) {
 
   reelOpenButton.addEventListener("click", () => {
     reelDialog.showModal();
-    reelVideo.play().catch(() => {
-      // Native controls remain available if autoplay is restricted or the file is not present yet.
-    });
+    if (selectedEmbed) {
+      reelEmbed.src = `${selectedEmbed}?autoplay=1&title=0&byline=0&portrait=0`;
+    }
   });
 
   const closeReel = () => {
-    reelVideo.pause();
+    reelEmbed.src = "";
     reelDialog.close();
   };
 
@@ -176,7 +167,7 @@ if (reelDialog && reelVideo && reelOpenButton && reelCloseButton) {
   });
 
   reelDialog.addEventListener("close", () => {
-    reelVideo.pause();
+    reelEmbed.src = "";
   });
 }
 

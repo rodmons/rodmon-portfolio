@@ -983,11 +983,13 @@ h1 {
   cursor: pointer;
 }
 
-.reel-video {
+.reel-video-embed {
   display: block;
   width: 100%;
   max-height: 72vh;
-  background: var(--navy);
+  aspect-ratio: 16 / 9;
+  border: 0;
+  background: #000;
 }
 
 .site-footer {

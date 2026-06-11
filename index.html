@@ -417,10 +417,13 @@
         <h2 id="reel-dialog-title">Live Action Demo Reel 2023</h2>
         <button class="close-reel travel-outline" type="button" data-close-reel aria-label="Close demo reel">Close</button>
       </div>
-      <video class="reel-video" controls preload="metadata" poster="assets/demo_reel/live_action_thumbnail.jpg">
-        <source src="assets/demo_reel/live_action_reel.mp4" type="video/mp4" />
-        Your browser does not support HTML video.
-      </video>
+      <iframe
+        class="reel-video-embed"
+        src=""
+        title="Rodmon demo reel"
+        allow="autoplay; fullscreen; picture-in-picture"
+        allowfullscreen
+      ></iframe>
     </dialog>
 
     <div class="gallery-lightbox" id="gallery-lightbox" aria-hidden="true">
